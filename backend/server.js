@@ -5,6 +5,7 @@ import SibApiV3Sdk from "sib-api-v3-sdk";
 
 import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
+import userRoutes from "./src/routes/userRoutes.js";
 import newsletterRoutes from "./src/routes/newsletterRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
 
@@ -25,8 +26,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:3000",
   "http://127.0.0.1:5173",
-  "https://celebhub1.up.railway.app",
-  "https://celebhub1-production.up.railway.app",
+  "https://celebhub10-production.up.railway.app",
   ...(process.env.CORS_ORIGIN?.split(",").map((value) => value.trim()).filter(Boolean) ?? []),
   ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
 ];
@@ -64,6 +64,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/admin", adminRoutes);
 
