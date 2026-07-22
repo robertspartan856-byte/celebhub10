@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import SibApiV3Sdk from "sib-api-v3-sdk";
 
 import { connectDB } from "./src/config/db.js";
+import authRoutes from "./src/routes/authRoutes.js";
 import newsletterRoutes from "./src/routes/newsletterRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
 
@@ -62,6 +63,7 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/admin", adminRoutes);
 
