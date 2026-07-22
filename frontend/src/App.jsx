@@ -3,7 +3,7 @@ import "./App.css";
 import Dashboard from "./pages/Dashboard";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://celebhub1-production.up.railway.app";
+  import.meta.env.VITE_API_BASE_URL || "https://celebhub10-production.up.railway.app";
 
 function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState("");
