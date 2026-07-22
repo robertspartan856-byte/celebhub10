@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import Dashboard from "./pages/Dashboard";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://celebhub1.up.railway.app";
+  import.meta.env.VITE_API_BASE_URL || "https://celebhub1-production.up.railway.app";
 
 function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -344,6 +345,88 @@ function App() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [authMessage, setAuthMessage] = useState("");
+  const [authLoading, setAuthLoading] = useState(false);
+
+  async function handleSignup(event) {
+    event.preventDefault();
+
+    setAuthLoading(true);
+    setAuthMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email: signupEmail,
+          password: signupPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Signup failed");
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setAuthMessage("Account created successfully!");
+      window.location.href = "/dashboard";
+    } catch (error) {
+      setAuthMessage(error.message);
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  async function handleLogin(event) {
+    event.preventDefault();
+
+    setAuthLoading(true);
+    setAuthMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: loginEmail,
+          password: loginPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setAuthMessage("Login successful!");
+      window.location.href = "/dashboard";
+    } catch (error) {
+      setAuthMessage(error.message);
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  if (window.location.pathname === "/dashboard") {
+    return <Dashboard />;
+  }
 
   if (window.location.pathname === "/admin-login") {
     return (
@@ -442,7 +525,64 @@ function App() {
           </a>
         </section>
 
-        <section className="features">
+        <section className="features" style={{ marginTop: "2rem" }}>
+          <div className="feature-card">
+            <h3>Create your account</h3>
+            <p>Sign up for CELEBHUB and start your fan experience.</p>
+            <form onSubmit={handleSignup} style={{ display: "grid", gap: "0.75rem", marginTop: "1rem" }}>
+              <input
+                type="text"
+                placeholder="Full name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email address"
+                value={signupEmail}
+                onChange={(event) => setSignupEmail(event.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={signupPassword}
+                onChange={(event) => setSignupPassword(event.target.value)}
+                required
+              />
+              <button type="submit" disabled={authLoading}>
+                {authLoading ? "Creating..." : "Create Account"}
+              </button>
+            </form>
+          </div>
+
+          <div className="feature-card">
+            <h3>Log in to CELEBHUB</h3>
+            <p>Access your dashboard and account details.</p>
+            <form onSubmit={handleLogin} style={{ display: "grid", gap: "0.75rem", marginTop: "1rem" }}>
+              <input
+                type="email"
+                placeholder="Email address"
+                value={loginEmail}
+                onChange={(event) => setLoginEmail(event.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={loginPassword}
+                onChange={(event) => setLoginPassword(event.target.value)}
+                required
+              />
+              <button type="submit" disabled={authLoading}>
+                {authLoading ? "Logging in..." : "Login"}
+              </button>
+            </form>
+          </div>
+
+          {authMessage && <div className="message" style={{ gridColumn: "1 / -1" }}>{authMessage}</div>}
+
           <div className="feature-card">
             <div className="icon">✦</div>
             <h3>Premium Fan Memberships</h3>
