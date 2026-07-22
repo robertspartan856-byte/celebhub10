@@ -14,7 +14,7 @@ function AdminLogin({ onLogin }) {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/admin/login", {
+      const response = await fetch("https://celebhub1.up.railway.app/api/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ function AdminDashboard() {
     try {
       const token = localStorage.getItem("celebhub_admin_token");
 
-      const response = await fetch("http://localhost:5000/api/admin/stats", {
+      const response = await fetch("https://celebhub1.up.railway.app/api/admin/stats", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -134,7 +134,7 @@ function AdminDashboard() {
       const token = localStorage.getItem("celebhub_admin_token");
 
       const response = await fetch(
-        `http://localhost:5000/api/newsletter/subscribers?search=${encodeURIComponent(
+        `https://celebhub1.up.railway.app/api/newsletter/subscribers?search=${encodeURIComponent(
           searchTerm
         )}`,
         {
@@ -374,7 +374,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/newsletter/subscribe",
+        "https://celebhub1.up.railway.app/api/newsletter/subscribe",
         {
           method: "POST",
           headers: {
@@ -402,7 +402,7 @@ function App() {
       console.error(error);
 
       setMessage(
-        "Unable to connect to the server. Make sure your backend is running on port 5000."
+        "Unable to connect to the server. Please try again shortly."
       );
     } finally {
       setLoading(false);
